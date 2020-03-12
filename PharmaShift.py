@@ -6,6 +6,8 @@ import os
 import tkinter
 from datetime import datetime
 from urllib.request import urlopen
+from PIL import Image as Img
+from wand.image import Image as Image1
 
 CURRENT_VERSION = "1.2"
 LAST_UPDATE_TIME = "03.03.2020"
@@ -72,4 +74,24 @@ def takepdf(url):
     file.write(str(datetime.datetime.now().day))
     file.close()
     return True
-	
+
+def manipulate_jpg(x, y):
+    # Opening Converted Images
+
+    image1 = Img.open(os.path.join(application_path, "tempFiles", "temp.jpg"))
+    image2 = Img.open(os.path.join(application_path, "tempFiles", "temp1.jpg"))
+
+    # Concatenate images and change It's Position for Screen Sticking
+    minNow = datetime.datetime.now().minute
+    if minNow == 15 or minNow == 45:
+        image = Img.new("RGB", (1490, 842))
+        image.paste(image1, (200, 0))
+        image.paste(image2, (795, 0))
+        image = image.resize((x-4, y-34), 1)
+        return image
+    else:
+        image = Img.new("RGB", (1490, 842))
+        image.paste(image1, (150, 0))
+        image.paste(image2, (745, 0))
+        image = image.resize((x-4, y-34), 1)
+        return image
