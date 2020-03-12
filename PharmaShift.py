@@ -8,6 +8,7 @@ from datetime import datetime
 from urllib.request import urlopen
 from PIL import Image as Img
 from wand.image import Image as Image1
+from pynput.keyboard import Key, Controller
 
 CURRENT_VERSION = "1.2"
 LAST_UPDATE_TIME = "03.03.2020"
@@ -19,6 +20,8 @@ url = 'https://www.istanbuleczaciodasi.org.tr/print/nobetciler_print.php?t=b&bid
 url2 = 'http://www.istanbuleczaciodasi.org.tr/print/nobetciler_print.php?t=b&bid=28&d=1&z=17&map_show=1'
 
 application_path = os.path.join(os.environ["HOME"], "NöbetUygulaması")
+
+keyboard = Controller()
 
 AUTHOR_INFO = """
 ****NÖBETÇİ ECZANE UYGULAMASI****
@@ -95,3 +98,42 @@ def manipulate_jpg(x, y):
         image.paste(image2, (745, 0))
         image = image.resize((x-4, y-34), 1)
         return image
+
+	# Realise New Day Is Came
+	
+def timeComp():
+
+    global url
+    while True:
+        file = open(os.path.join(application_path, "dayofmonth.txt"), 'r')
+        dayofmonth = file.readline()
+        file.close()
+        if datetime.datetime.now().day != int(dayofmonth):
+            if datetime.datetime.now().hour == 9 or datetime.datetime.now().hour == 18:
+                if datetime.datetime.now().minute == 15:
+                    time.sleep(70)
+                    while not takepdf(url):
+                        time.sleep(30)
+                    display()
+
+        minNow = datetime.datetime.now().minute
+        if minNow == 0 or minNow == 15 or minNow == 30 or minNow == 45:
+            display()
+			
+def display():
+
+	# Remake the Picture and Display It Again
+	global window_height, window_width
+    image = manipulate_jpg(window_width,window_height)
+    last_path = os.path.join(application_path, "last.jpg")
+    image.save(last_path, "JPEG")
+   
+    os.system("sudo killall gpicview")
+    os.popen("sudo gpicview " + last_path)
+	
+	# Full Screen
+	keyboard.press(Key.f11)
+	keyboard.release(Key.f11)
+
+    # Test Internet Connection
+
