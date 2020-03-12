@@ -137,3 +137,24 @@ def display():
 
     # Test Internet Connection
 
+while True:
+    if internet_accessible():
+        break
+    else:
+        log("****İNTERNET BAĞLANTISI SAĞLANAMADI****")
+        time.sleep(10)
+
+# Find Screen Resolution
+            
+root = tkinter.Tk()
+
+window_width = root.winfo_screenwidth() 
+window_height = root.winfo_screenheight()
+
+root.destroy()
+
+timerThread = Thread(target= timeComp)
+print(AUTHOR_INFO)
+takepdf(url)
+display()
+timerThread.start()
